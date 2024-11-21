@@ -1,7 +1,7 @@
 function Button (props){
 
     return (
-        <button {...props} className="bg-slate-500 py-2 rounded-md text-slate-50 font-bold"      
+        <button {...props} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"      
         >
             {props.children}
         </button>

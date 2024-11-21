@@ -2,20 +2,36 @@ import { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import Form from "./Form";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config";
+import { useNavigate } from "react-router-dom";
 
-function Login({validarLogin}) {
+function Login({ validarLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
-    function validarInput(){
-        if (!email.trim() || !password.trim()){
-            alert("Email ou senha não foram preenchidos")
-            return false
-        }
-        setEmail("")
-        setPassword("")
-        return true
+  function validarInput() {
+    if (!email.trim() || !password.trim()) {
+      alert("Email ou senha não foram preenchidos");
+      return false;
     }
+    return true;
+  }
+
+  async function handleLogin() {
+    if (!validarInput()) return;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login realizado com sucesso!");
+      navigate("/Home")
+      setEmail("");
+      setPassword("");   
+    } catch (error) {
+      alert("Erro ao fazer login: " + error.message);
+    }
+  }
 
   return (
     <Form>
@@ -33,13 +49,7 @@ function Login({validarLogin}) {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <Button onClick={() => {
-        if (validarInput()){
-            validarLogin(email, password)
-        }
-      }}>
-        Login
-      </Button>
+      <Button onClick={handleLogin}>Login</Button>
     </Form>
   );
 }
