@@ -1,5 +1,5 @@
 import { auth } from "./config";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 // Registrar usuário
 export async function registrarUsuario(email, password) {
@@ -21,6 +21,16 @@ export async function loginUsuario(email, password) {
     return userCredential.user;
   } catch (error) {
     console.error("Erro ao fazer login:", error.message);
+    throw error;
+  }
+}
+
+export async function logoutUsuario() {
+  try {
+    await signOut(auth);
+    console.log("Logout realizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao fazer logout:", error.message);
     throw error;
   }
 }

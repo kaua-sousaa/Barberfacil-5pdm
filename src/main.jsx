@@ -6,25 +6,24 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import SelectService from './pages/SelectService.jsx'
 import Payment from './pages/Payment.jsx'
 import Home from './pages/Home.jsx'
+import Layout from './components/Layout.jsx'
 
 
 const router = createBrowserRouter([
   {
+  path: "",
+  element: <App/>
+  },
+
+  {
     path: "/",
-    element: <App/>
+    element: <Layout />,
+    children: [
+      { path: "home", element: <Home /> },
+      { path: "select-service", element: <SelectService /> },
+      { path: "payment", element: <Payment /> },
+    ],
   },
-  {
-    path: "SelectService",
-    element: <SelectService/>
-  },
-  {
-    path: "Payment",
-    element: <Payment/>
-  },
-  {
-    path: "Home",
-    element: <Home/>
-  }
 ])
 createRoot(document.getElementById('root')).render(
   <StrictMode>

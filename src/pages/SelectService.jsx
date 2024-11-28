@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Title from "../components/Title";
-import DatePicker from "react-datepicker"; 
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "../components/Button";
 
 function SelectService() {
   const [selectedServices, setSelectedServices] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null); 
-  const navigate = useNavigate(); 
+  const [selectedDate, setSelectedDate] = useState(null);
+  const navigate = useNavigate();
 
   const servicesCabelo = [
     {
@@ -73,24 +73,23 @@ function SelectService() {
   };
 
   const handleNextPage = () => {
-    console.log(selectedServices)
-    if (!selectedDate || selectedServices.length == 0) {
+    if (!selectedDate || selectedServices.length === 0) {
       alert("Data ou serviço não selecionado.");
       return;
     }
-    navigate("/Payment", { state: { selectedServices, selectedDate } });
+    navigate("/payment", { state: { selectedServices, selectedDate } });
   };
 
   return (
-    <div className="flex justify-center h-screen bg-slate-500 p-6">
-      <div>
+    <div className="flex justify-center min-h-screen bg-slate-500 p-4 sm:p-6 overflow-auto">
+      <div className="w-full max-w-4xl">
         <Title>Barber Fácil</Title>
         <div className="bg-slate-700 p-4 rounded-md">
           <h1 className="text-center mb-5 font-semibold text-slate-50">
-            Serviços prestados
+            Serviços Prestados
           </h1>
 
-          <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             {servicesCabelo.map((service) => (
               <div
                 key={service.id}
@@ -100,7 +99,7 @@ function SelectService() {
                 <img
                   src={service.img}
                   alt={service.nome}
-                  className="w-full h-32 object-cover mb-2 rounded"
+                  className="w-full h-32 object-cover mb-2 rounded transition-all duration-150"
                 />
                 <h2 className="text-center font-semibold">{service.nome}</h2>
                 <p className="text-center">R$ {service.preco.toFixed(2)}</p>
@@ -116,7 +115,7 @@ function SelectService() {
               <img
                 src={serviceBarbaBigode.img}
                 alt={serviceBarbaBigode.nome}
-                className="w-full h-32 object-cover mb-2 rounded"
+                className="w-full max-h-32 object-cover mb-2 rounded"
               />
               <h2 className="text-center font-semibold">
                 {serviceBarbaBigode.nome}
@@ -128,21 +127,39 @@ function SelectService() {
           </div>
 
           <div className="mb-6">
-            <h2 className="text-center text-slate-50 mb-3">Selecione a data</h2>
-            <div className="flex justify-center">
+            <h2 className="text-center text-slate-50 mb-3">Selecione a Data</h2>
+            <div className="flex justify-center gap-4">
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
                 dateFormat="dd/MM/yyyy"
                 minDate={new Date()}
                 className="rounded p-2 text-center bg-white shadow-md w-60"
-                placeholderText="Escolha uma data"
+                placeholderText="Escolha a data"
               />
             </div>
           </div>
 
-          <div className="bg-slate-50 rounded-md p-1 mb-5">
-            <table>
+          <div className="mb-6">
+            <h2 className="text-center text-slate-50 mb-3">Selecione a Hora</h2>
+            <div className="flex justify-center gap-4">
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                showTimeSelect // Habilita a seleção de horário
+                showTimeSelectOnly // Oculta o calendário e mostra apenas a seleção de hora
+                timeFormat="HH:mm" // Formato de hora de 24h
+                timeIntervals={15} // Intervalo de 15 minutos entre os horários
+                dateFormat="HH:mm" // Apenas formato de hora
+                minDate={new Date()}
+                className="rounded p-2 text-center bg-white shadow-md w-60"
+                placeholderText="Escolha a hora"
+              />
+            </div>
+          </div>
+
+          <div className="bg-slate-50 rounded-md p-1 mb-5 overflow-x-auto">
+            <table className="table-auto w-full">
               <thead>
                 <tr className="border border-slate-500">
                   <th>Serviço</th>
@@ -153,9 +170,9 @@ function SelectService() {
               <tbody>
                 {selectedServices.map((service) => (
                   <tr key={service.id} className="border border-slate-500">
-                    <td className="p-5">{service.nome}</td>
-                    <td className="px-7">R$ {service.preco.toFixed(2)}</td>
-                    <td className="px-7">
+                    <td className="p-2">{service.nome}</td>
+                    <td className="p-2">R$ {service.preco.toFixed(2)}</td>
+                    <td className="p-2">
                       <button
                         onClick={() =>
                           setSelectedServices(
@@ -174,10 +191,8 @@ function SelectService() {
               </tbody>
               <tfoot>
                 <tr className="border border-slate-500">
-                  <td colSpan="2" className="p-2 text-right font-bold">
-                    Total:
-                  </td>
-                  <td className="p-2 font-bold">
+                  <td className="p-2 font-bold">Total:</td>
+                  <td className="p-2 font-bold text-left">
                     R$ {calculateTotal(selectedServices)}
                   </td>
                 </tr>
@@ -185,11 +200,9 @@ function SelectService() {
             </table>
           </div>
 
-          <Button
-            onClick={handleNextPage}
-          >
-            Ir para Resumo
-          </Button>
+          <div className="flex justify-center">
+            <Button onClick={handleNextPage}>Ir para Resumo</Button>
+          </div>
         </div>
       </div>
     </div>

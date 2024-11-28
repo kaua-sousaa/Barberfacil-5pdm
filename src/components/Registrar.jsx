@@ -2,11 +2,12 @@ import { useState } from "react";
 import Input from "./Input";
 import Form from "./Form";
 import Button from "./Button";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase/config";
 
 function Registrar({ registrarConta }) {
     const [email, setEmail] = useState("");
+    const [nome, setNome] = useState("")
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
   
@@ -26,13 +27,21 @@ function Registrar({ registrarConta }) {
   
     async function handleRegister() {
       if (!validarRegistro()) return;
-  
+    
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+    
+        // Atualizar o perfil do usuário com o nome de usuário
+        await updateProfile(user, {
+          displayName: nome, // Supondo que você tenha uma variável "username"
+        });
+    
         alert("Conta criada com sucesso!");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
+        setNome(""); // Resetar o campo de nome de usuário
       } catch (error) {
         alert("Erro ao registrar: " + error.message);
       }
@@ -45,6 +54,12 @@ function Registrar({ registrarConta }) {
           placeholder="Digite seu email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Digite seu nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
         />
   
         <Input

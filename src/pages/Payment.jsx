@@ -45,7 +45,7 @@ function Payment() {
   
       alert("Pagamento confirmado e salvo no banco de dados! ID: " + docRef.id);
       setShowModal(false);
-      navigate("/SelectService");
+      navigate("/select-service");
     } catch (error) {
       console.error("Erro ao salvar o pagamento:", error);
       alert("Ocorreu um erro ao salvar o pagamento. Tente novamente.");

@@ -2,11 +2,11 @@ import { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
 import Form from "./Form";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
 import { useNavigate } from "react-router-dom";
 
-function Login({ validarLogin }) {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate()
@@ -25,7 +25,7 @@ function Login({ validarLogin }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Login realizado com sucesso!");
-      navigate("/Home")
+      navigate("/home")
       setEmail("");
       setPassword("");   
     } catch (error) {
@@ -33,6 +33,17 @@ function Login({ validarLogin }) {
     }
   }
 
+  function handleLogout(){
+    signOut(auth)
+    .then(() => {
+      console.log("Usuario deslogado")
+      window.location.href = "/"
+    })
+    .catch((error) => {
+      console.log("Erro ao deslogar")
+    })
+  }
+  
   return (
     <Form>
       <Input
